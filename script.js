@@ -67,7 +67,14 @@ function addTransaction(description, amount, category) {
         return false;
     }
     
-    const parsedAmount = parseFloat(amount);
+    let parsedAmount = parseFloat(amount);
+    
+    // Automatically handle sign based on category
+    if (expenseCategories.includes(category)) {
+        parsedAmount = -Math.abs(parsedAmount);
+    } else if (incomeCategories.includes(category)) {
+        parsedAmount = Math.abs(parsedAmount);
+    }
     
     const newTransaction = {
         id: generateId(),
