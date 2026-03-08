@@ -8,22 +8,17 @@
 </head>
 <body>
     <div class="container">
-
-        <!-- Header Section -->
+        
         <header class="header">
             <h1>💰 Smart Expense Tracker</h1>
             <p>Manage your finances wisely</p>
         </header>
 
-
-
-        <!-- Balance Display Section-->
         <section class="balance-section">
             <h2>Your Balance</h2>
-            <h2 id="balance" class="balance-amount">₹0.00</h2>
+            <h1 id="balance" class="balance-amount">₹0.00</h1>
         </section>
 
-        <!-- Income & Expense Summary Section -->
         <section class="summary-section">
             <div class="summary-card income-card">
                 <h3>Income</h3>
@@ -31,26 +26,16 @@
             </div>
             <div class="summary-card expense-card">
                 <h3>Expenses</h3>
-                <p id="total-expenses" class="amount expenses"> -₹0.00</p>
+                <p id="total-expenses" class="amount expense">-₹0.00</p>
             </div>
         </section>
 
-
-        <!-- Budget Monitoring System  -->
         <section class="budget-section">
             <div class="budget-header">
                 <h3>📊 Monthly Budget</h3>
-                <div class="budet-input-group">
-                    <input 
-                        type = 'number'
-                        id = "budget-input"
-                        placeholder="Set budget"
-                        min = '0'
-                        max="100"
-                    >
-                    <button id="set-budget-btn" type="button" class="btn btn-budget">
-                        Set
-                    </button>
+                <div class="budget-input-group">
+                    <input type="number" id="budget-input" placeholder="Set budget" min="0" step="100">
+                    <button id="set-budget-btn" type="button" class="btn btn-budget">Set</button>
                 </div>
             </div>
             <div class="budget-display">
@@ -61,48 +46,31 @@
                 <div class="progress-bar">
                     <div id="progress-fill" class="progress-fill"></div>
                 </div>
-                <p id="budget-status" class="budget-status">
-                    Set a budget to track spending
-                </p>
-            </div>  
+                <p id="budget-status" class="budget-status">Set a budget to track spending</p>
+            </div>
         </section>
+
         <section class="form-section">
             <h3>➕ Add Transaction</h3>
             <form id="transaction-form">
                 <div class="form-group">
                     <label for="description">Description</label>
-                    <input 
-                        type="text" 
-                        id="description" 
-                        name="description"
-                        placeholder="Enter description..."
-                        maxlength="50"
-                        required
-                    >
+                    <input type="text" id="description" placeholder="Enter description..." required>
                 </div>
-                
                 <div class="form-group">
                     <label for="amount">Amount (negative for expense)</label>
-                    <input 
-                        type="number" 
-                        id="amount" 
-                        name="amount"
-                        placeholder="Enter amount..."
-                        step="0.01"
-                        required
-                    >
+                    <input type="number" id="amount" placeholder="Enter amount..." step="0.01" required>
                 </div>
-                
                 <div class="form-group">
                     <label for="category">Category</label>
-                    <select id="category" name="category" required>
+                    <select id="category" required>
                         <option value="">Select Category</option>
-                        <optgroup label="Income Categories">
+                        <optgroup label="Income">
                             <option value="Salary">💼 Salary</option>
                             <option value="Freelance">💻 Freelance</option>
                             <option value="Investment">📈 Investment</option>
                         </optgroup>
-                        <optgroup label="Expense Categories">
+                        <optgroup label="Expense">
                             <option value="Food">🍔 Food</option>
                             <option value="Transport">🚗 Transport</option>
                             <option value="Shopping">🛒 Shopping</option>
@@ -113,88 +81,69 @@
                         </optgroup>
                     </select>
                 </div>
-                
-                <button type="submit" class="btn btn-add">
-                    Add Transaction
-                </button>
+                <button type="submit" class="btn btn-add">Add Transaction</button>
             </form>
         </section>
 
-        <!-- ============================================
-             FILTER & SORT SECTION
-             ============================================ -->
         <section class="filter-section">
             <h3>🔍 Filter Transactions</h3>
             <div class="filter-controls">
                 <div class="filter-group">
                     <label for="filter-type">Type:</label>
-                    <select id="filter-type" name="filter-type">
-                        <option value="all">All Transactions</option>
-                        <option value="income">Income Only</option>
-                        <option value="expense">Expenses Only</option>
+                    <select id="filter-type">
+                        <option value="all">All</option>
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
                     </select>
                 </div>
-                
                 <div class="filter-group">
                     <label for="filter-category">Category:</label>
-                    <select id="filter-category" name="filter-category">
-                        <option value="all">All Categories</option>
-                        <option value="Salary">💼 Salary</option>
-                        <option value="Freelance">💻 Freelance</option>
-                        <option value="Investment">📈 Investment</option>
-                        <option value="Food">🍔 Food</option>
-                        <option value="Transport">🚗 Transport</option>
-                        <option value="Shopping">🛒 Shopping</option>
-                        <option value="Entertainment">🎬 Entertainment</option>
-                        <option value="Bills">📄 Bills</option>
-                        <option value="Health">🏥 Health</option>
-                        <option value="Other">📦 Other</option>
+                    <select id="filter-category">
+                        <option value="all">All</option>
+                        <option value="Salary">Salary</option>
+                        <option value="Freelance">Freelance</option>
+                        <option value="Investment">Investment</option>
+                        <option value="Food">Food</option>
+                        <option value="Transport">Transport</option>
+                        <option value="Shopping">Shopping</option>
+                        <option value="Entertainment">Entertainment</option>
+                        <option value="Bills">Bills</option>
+                        <option value="Health">Health</option>
+                        <option value="Other">Other</option>
                     </select>
                 </div>
-                
                 <div class="filter-group">
-                    <label for="sort-by">Sort By:</label>
-                    <select id="sort-by" name="sort-by">
-                        <option value="date-desc">Newest First</option>
-                        <option value="date-asc">Oldest First</option>
-                        <option value="amount-desc">Highest Amount</option>
-                        <option value="amount-asc">Lowest Amount</option>
+                    <label for="sort-by">Sort:</label>
+                    <select id="sort-by">
+                        <option value="date-desc">Newest</option>
+                        <option value="date-asc">Oldest</option>
+                        <option value="amount-desc">Highest</option>
+                        <option value="amount-asc">Lowest</option>
                     </select>
                 </div>
             </div>
         </section>
 
-        <!-- History -->
         <section class="transactions-section">
             <div class="transactions-header">
                 <h3>📋 Transaction History</h3>
-                <span id="transaction-count" class="transaction-count">
-                    0 transactions
-                </span>
+                <span id="transaction-count" class="transaction-count">0 transactions</span>
             </div>
-            
             <div id="transaction-list" class="transaction-list">
-                <p class="empty-message">
-                    No transactions yet. Add your first transaction!
-                </p>
+                <p class="empty-message">No transactions yet. Add your first transaction!</p>
             </div>
-            
-            <button id="clear-all-btn" type="button" class="btn btn-clear">
-                🗑️ Clear All Transactions
-            </button>
+            <button id="clear-all-btn" type="button" class="btn btn-clear hidden">🗑️ Clear All</button>
         </section>
 
-        <!-- STATS -->
         <section class="stats-section">
             <h3>📈 Statistics</h3>
-            
             <div class="stats-grid">
                 <div class="stat-card">
                     <span class="stat-label">Total Transactions</span>
                     <span id="stat-total" class="stat-value">0</span>
                 </div>
                 <div class="stat-card">
-                    <span class="stat-label">Average Transaction</span>
+                    <span class="stat-label">Average</span>
                     <span id="stat-average" class="stat-value">₹0.00</span>
                 </div>
                 <div class="stat-card">
@@ -206,21 +155,20 @@
                     <span id="stat-largest-expense" class="stat-value expense">₹0.00</span>
                 </div>
             </div>
-            
             <div class="category-breakdown">
-                <h4>Expense Breakdown by Category</h4>
+                <h4>Expense Breakdown</h4>
                 <div id="category-stats" class="category-stats">
-                    <p class="empty-message">No expense data available</p>
+                    <p class="empty-message">No expense data</p>
                 </div>
             </div>
         </section>
 
-        <!-- fOOTER -->
         <footer class="footer">
-            <p>Smart Expense Tracker &copy; 2025</p>
-            <p>Front End Engineering Project</p>
-            <p>By Samanyu Thakur & Tamanna Kakkar</p>
+            <p>Smart Expense Tracker © 2024</p>
         </footer>
+
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
