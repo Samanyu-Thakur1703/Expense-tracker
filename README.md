@@ -96,7 +96,7 @@ A modern, responsive web application for personal financial management built wit
 ## 🎬 Demo
 
 ### Live Preview
-[View Live Demo](https://yourusername.github.io/smart-expense-tracker)
+[View Live Demo](https://samanyu-thakur1703.github.io/Expense-tracker/)
 
 ### Screenshots
 
