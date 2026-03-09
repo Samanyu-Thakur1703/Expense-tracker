@@ -1,4 +1,4 @@
-# 💰 Smart Expense Tracker
+<img width="1785" height="792" alt="image" src="https://github.com/user-attachments/assets/56b2fb20-873c-477f-8a8b-dfde5db5dbac" /># 💰 Smart Expense Tracker
 
 A modern, responsive web application for personal financial management built with vanilla JavaScript. Track income, expenses, set budgets, and gain insights into spending patterns through an intuitive interface.
 
@@ -104,7 +104,8 @@ A modern, responsive web application for personal financial management built wit
 <summary>Click to view screenshots</summary>
 
 #### Desktop View
-![Desktop Dashboard](assets/screenshots/desktop-dashboard.png)
+![Desktop Dashboard](<img width="1785" height="792" alt="image" src="https://github.com/user-attachments/assets/16818014-45e0-401b-bc32-58ec94874754" />
+)
 
 #### Mobile View
 ![Mobile Interface](assets/screenshots/mobile-view.png)
