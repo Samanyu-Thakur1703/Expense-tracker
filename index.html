@@ -1,174 +1,356 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Expense Tracker</title>
+    <title>Smart Expense Tracker - Intelligent Financial Management</title>
+    <meta name="description"
+        content="Master your finances, track expenses, and optimize your spending with our intelligent, glassmorphism-powered financial dashboard.">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="landing.css">
 </head>
+
 <body>
-    <div class="container">
-        
-        <header class="header">
-            <h1>💰 Smart Expense Tracker</h1>
-            <p>Manage your finances wisely</p>
+    <nav class="navbar glass-card">
+        <div class="logo">
+            <span class="logo-icon">💰</span>
+            <span class="logo-text">Smart Expense</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#about" class="nav-link">Understanding Expenses</a></li>
+            <li><a href="#how-to-use" class="nav-link">How to Use</a></li>
+            <li><a href="#resources" class="nav-link">Resources</a></li>
+            <li><a href="glossary.html" class="nav-link">Glossary</a></li>
+            <li><a href="markets.html" class="nav-link" style="color: var(--accent-purple);">Live Markets <span
+                        style="font-size: 0.8rem; vertical-align: super;">NEW</span></a></li>
+            <li><a href="tracker.html" class="nav-btn">Launch Tracker</a></li>
+        </ul>
+    </nav>
+
+    <main class="container landing-container">
+
+        <header class="hero-section glass-card">
+            <!-- Ambient Particles -->
+            <div class="ambient-particle particle-1"></div>
+            <div class="ambient-particle particle-2"></div>
+            <div class="ambient-particle particle-3"></div>
+
+            <div class="hero-content">
+                <h1 class="hero-title">Take Control.<br>Master Your Finance.</h1>
+                <p class="hero-subtitle">Elevate your financial awareness with an ultra-refined tracker designed to
+                    pinpoint spending leaks and boost your savings rate effortlessly.</p>
+                <div class="hero-cta-group">
+                    <a href="tracker.html" class="btn-primary-large">
+                        Start Tracking Now <span class="arrow">→</span>
+                    </a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-mockup">
+                    <div class="mockup-card balance">
+                        <span class="label">Balance</span>
+                        <span class="value positive">₹45,200</span>
+                    </div>
+                    <div class="mockup-card expense">
+                        <span class="label">Recent Expense</span>
+                        <span class="value negative">-₹1,200</span>
+                        <span class="cat">Transport</span>
+                    </div>
+                </div>
+            </div>
         </header>
 
-        <section class="balance-section">
-            <h2>Your Balance</h2>
-            <h1 id="balance" class="balance-amount">₹0.00</h1>
-        </section>
-
-        <section class="summary-section">
-            <div class="summary-card income-card">
-                <h3>Income</h3>
-                <p id="total-income" class="amount income">+₹0.00</p>
+        <section id="about" class="info-section">
+            <div class="section-heading text-center">
+                <h2>The Anatomy of an Expense</h2>
+                <p>Knowledge is wealth. Understanding where your money goes is the first step to financial freedom.</p>
             </div>
-            <div class="summary-card expense-card">
-                <h3>Expenses</h3>
-                <p id="total-expenses" class="amount expense">-₹0.00</p>
-            </div>
-        </section>
 
-        <section class="budget-section">
-            <div class="budget-header">
-                <h3>📊 Monthly Budget</h3>
-                <div class="budget-input-group">
-                    <input type="number" id="budget-input" placeholder="Set budget" min="0" step="100">
-                    <button id="set-budget-btn" type="button" class="btn btn-budget">Set</button>
+            <div class="info-grid">
+                <div class="info-card glass-card">
+                    <div class="icon-wrapper purple">📊</div>
+                    <h3>Why Track?</h3>
+                    <p>It's the process of recording all your financial outflows. Without tracking, small recurring
+                        leakages can secretly drain your entire budget.</p>
                 </div>
-            </div>
-            <div class="budget-display">
-                <div class="budget-info">
-                    <span>Budget: ₹<span id="budget-amount">0</span></span>
-                    <span>Spent: ₹<span id="spent-amount">0</span></span>
+                <div class="info-card glass-card">
+                    <div class="icon-wrapper pink">🎯</div>
+                    <h3>The 50/30/20 Rule</h3>
+                    <p>A proven strategy: Allocate <strong>50%</strong> for Needs, <strong>30%</strong> for Wants, and
+                        <strong>20%</strong> for Savings. Our dashboard helps visualize this split.
+                    </p>
                 </div>
-                <div class="progress-bar">
-                    <div id="progress-fill" class="progress-fill"></div>
-                </div>
-                <p id="budget-status" class="budget-status">Set a budget to track spending</p>
-            </div>
-        </section>
-
-        <section class="form-section">
-            <h3>➕ Add Transaction</h3>
-            <form id="transaction-form">
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <input type="text" id="description" placeholder="Enter description..." required>
-                </div>
-                <div class="form-group">
-                    <label for="amount">Amount (negative for expense)</label>
-                    <input type="number" id="amount" placeholder="Enter amount..." step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="category">Category</label>
-                    <select id="category" required>
-                        <option value="">Select Category</option>
-                        <optgroup label="Income">
-                            <option value="Salary">💼 Salary</option>
-                            <option value="Freelance">💻 Freelance</option>
-                            <option value="Investment">📈 Investment</option>
-                        </optgroup>
-                        <optgroup label="Expense">
-                            <option value="Food">🍔 Food</option>
-                            <option value="Transport">🚗 Transport</option>
-                            <option value="Shopping">🛒 Shopping</option>
-                            <option value="Entertainment">🎬 Entertainment</option>
-                            <option value="Bills">📄 Bills</option>
-                            <option value="Health">🏥 Health</option>
-                            <option value="Other">📦 Other</option>
-                        </optgroup>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-add">Add Transaction</button>
-            </form>
-        </section>
-
-        <section class="filter-section">
-            <h3>🔍 Filter Transactions</h3>
-            <div class="filter-controls">
-                <div class="filter-group">
-                    <label for="filter-type">Type:</label>
-                    <select id="filter-type">
-                        <option value="all">All</option>
-                        <option value="income">Income</option>
-                        <option value="expense">Expense</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="filter-category">Category:</label>
-                    <select id="filter-category">
-                        <option value="all">All</option>
-                        <option value="Salary">Salary</option>
-                        <option value="Freelance">Freelance</option>
-                        <option value="Investment">Investment</option>
-                        <option value="Food">Food</option>
-                        <option value="Transport">Transport</option>
-                        <option value="Shopping">Shopping</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Bills">Bills</option>
-                        <option value="Health">Health</option>
-                        <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="sort-by">Sort:</label>
-                    <select id="sort-by">
-                        <option value="date-desc">Newest</option>
-                        <option value="date-asc">Oldest</option>
-                        <option value="amount-desc">Highest</option>
-                        <option value="amount-asc">Lowest</option>
-                    </select>
+                <div class="info-card glass-card">
+                    <div class="icon-wrapper green">🌱</div>
+                    <h3>Fixed vs Variable</h3>
+                    <p><strong>Fixed</strong> expenses (rent, insurance) rarely change. <strong>Variable</strong>
+                        expenses (dining, shopping) are where you have the most power to cut back.</p>
                 </div>
             </div>
         </section>
 
-        <section class="transactions-section">
-            <div class="transactions-header">
-                <h3>📋 Transaction History</h3>
-                <span id="transaction-count" class="transaction-count">0 transactions</span>
+        <section id="how-to-use" class="info-section">
+            <div class="section-heading text-center">
+                <h2>How to Master the Tracker</h2>
+                <p>Follow these simple steps to gain total control over your financial life.</p>
             </div>
-            <div id="transaction-list" class="transaction-list">
-                <p class="empty-message">No transactions yet. Add your first transaction!</p>
+
+            <div
+                style="position: relative; padding-left: 2rem; border-left: 2px solid var(--accent-purple); margin: 0 auto; max-width: 600px;">
+                <div class="glass-card"
+                    style="padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; position: relative;">
+                    <span
+                        style="position: absolute; left:-3.2rem; top: 1.5rem; background: var(--bg-base); color: var(--accent-purple); border: 2px solid var(--accent-purple); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items:center; justify-content:center; font-weight:bold;">1</span>
+                    <h4 style="color: var(--accent-purple); margin-bottom: 0.5rem;">Set Your Monthly Baseline</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Start by entering your total monthly
+                        budget in the tracker. This creates a hard ceiling so the system can warn you if you overspend.
+                    </p>
+                </div>
+
+                <div class="glass-card"
+                    style="padding: 1.5rem; border-radius: 12px; margin-bottom: 2rem; position: relative;">
+                    <span
+                        style="position: absolute; left:-3.2rem; top: 1.5rem; background: var(--bg-base); color: var(--accent-pink); border: 2px solid var(--accent-pink); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items:center; justify-content:center; font-weight:bold;">2</span>
+                    <h4 style="color: var(--accent-pink); margin-bottom: 0.5rem;">Log Every Transaction</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Whenever you earn or spend, log it
+                        immediately. Categorizing your transactions accurately is vital for generating the breakdown
+                        piecharts.</p>
+                </div>
+
+                <div class="glass-card" style="padding: 1.5rem; border-radius: 12px; position: relative;">
+                    <span
+                        style="position: absolute; left:-3.2rem; top: 1.5rem; background: var(--bg-base); color: var(--accent-green); border: 2px solid var(--accent-green); border-radius: 50%; width: 30px; height: 30px; display: flex; align-items:center; justify-content:center; font-weight:bold;">3</span>
+                    <h4 style="color: var(--accent-green); margin-bottom: 0.5rem;">Analyze & Optimize</h4>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem;">Use the Filter tools to review specific
+                        categories. Look at the generated Statistics Breakdown to find exactly where you can cut back
+                        next month.</p>
+                </div>
             </div>
-            <button id="clear-all-btn" type="button" class="btn btn-clear hidden">🗑️ Clear All</button>
         </section>
 
-        <section class="stats-section">
-            <h3>📈 Statistics</h3>
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <span class="stat-label">Total Transactions</span>
-                    <span id="stat-total" class="stat-value">0</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Average</span>
-                    <span id="stat-average" class="stat-value">₹0.00</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Largest Income</span>
-                    <span id="stat-largest-income" class="stat-value income">₹0.00</span>
-                </div>
-                <div class="stat-card">
-                    <span class="stat-label">Largest Expense</span>
-                    <span id="stat-largest-expense" class="stat-value expense">₹0.00</span>
-                </div>
+        <section id="resources" class="resources-section glass-card">
+            <div class="section-heading">
+                <h2>Financial Literacy Hub</h2>
+                <p>Level up your financial IQ with these highly recommended guides from trusted authorities.</p>
             </div>
-            <div class="category-breakdown">
-                <h4>Expense Breakdown</h4>
-                <div id="category-stats" class="category-stats">
-                    <p class="empty-message">No expense data</p>
+
+            <div class="resource-links">
+                <a href="https://www.nerdwallet.com/article/finance/how-to-budget" target="_blank"
+                    class="resource-card glass-card interactive">
+                    <div class="resource-content">
+                        <h4>NerdWallet: Budgeting 101</h4>
+                        <p>A comprehensive guide to picking the right budget system that fits your lifestyle.</p>
+                    </div>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://www.investopedia.com/personal-finance-4427760" target="_blank"
+                    class="resource-card glass-card interactive">
+                    <div class="resource-content">
+                        <h4>Investopedia: Personal Finance</h4>
+                        <p>Deep dive into personal finance concepts, investing strategies, and long-term planning.</p>
+                    </div>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://mint.intuit.com/blog/budgeting/" target="_blank"
+                    class="resource-card glass-card interactive">
+                    <div class="resource-content">
+                        <h4>Mint Blog: Everyday Tips</h4>
+                        <p>Actionable, daily tips to cut costs without sacrificing your quality of life.</p>
+                    </div>
+                    <span class="external-icon">↗</span>
+                </a>
+                <a href="https://cleartax.in/s/income-tax" target="_blank" class="resource-card glass-card interactive">
+                    <div class="resource-content">
+                        <h4>ClearTax: Tax Planning (India)</h4>
+                        <p>Understand how to optimize your taxes properly and maximize your take-home income.</p>
+                    </div>
+                    <span class="external-icon">↗</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="testimonials" class="info-section">
+            <div class="section-heading text-center">
+                <h2>Wall of Love</h2>
+                <p>See how Smart Expense is helping thousands master their money.</p>
+            </div>
+
+            <div class="testimonials-scroll-container">
+                <div class="testimonial-card glass-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="quote">"I used to wonder where my money went at the end of the month. The analytics break
+                        it down perfectly. Highly recommended!"</p>
+                    <div class="author">
+                        <div class="author-avatar purple">S</div>
+                        <div class="author-info">
+                            <h5>Sarah Jenkins</h5>
+                            <span>Freelancer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card glass-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="quote">"Finally, an expense tracker that isn't clunky! The beautiful UI makes me actually
+                        want to log my daily coffee expenses."</p>
+                    <div class="author">
+                        <div class="author-avatar pink">M</div>
+                        <div class="author-info">
+                            <h5>Mark David</h5>
+                            <span>Software Engineer</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card glass-card">
+                    <div class="stars">⭐⭐⭐⭐</div>
+                    <p class="quote">"The 50/30/20 budget framework integration is fantastic. Helped my family save for
+                        our very first home downpayment."</p>
+                    <div class="author">
+                        <div class="author-avatar green">E</div>
+                        <div class="author-info">
+                            <h5>Elena Rodriguez</h5>
+                            <span>Small Business Owner</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card glass-card">
+                    <div class="stars">⭐⭐⭐⭐⭐</div>
+                    <p class="quote">"I love the visual interface. Knowing my spending habits has reduced my stress
+                        significantly."</p>
+                    <div class="author">
+                        <div class="author-avatar"
+                            style="background: rgba(96, 165, 250, 0.15); color: var(--accent-blue); box-shadow: var(--glow-blue);">
+                            D</div>
+                        <div class="author-info">
+                            <h5>David Chen</h5>
+                            <span>Student</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <footer class="footer">
-            <p>Smart Expense Tracker © 2024</p>
-        </footer>
+        <section id="pricing" class="info-section">
+            <div class="section-heading text-center">
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Start mastering your money today. No hidden fees.</p>
+            </div>
 
-    </div>
+            <div class="pricing-grid">
+                <!-- Basic Tier -->
+                <div class="pricing-card glass-card">
+                    <h3 class="tier-name">Basic</h3>
+                    <div class="price">
+                        <span class="currency">₹</span><span class="amount">0</span><span class="period">/mo</span>
+                    </div>
+                    <p class="tier-desc">Perfect for students and individuals just getting started.</p>
+                    <ul class="features-list">
+                        <li>✔️ Log unlimited transactions</li>
+                        <li>✔️ Basic analytics dashboard</li>
+                        <li>✔️ 50/30/20 Budget tracking</li>
+                        <li class="disabled">❌ Export data to CSV/PDF</li>
+                    </ul>
+                    <a href="tracker.html" class="btn-primary-large basic-btn"
+                        style="width: 100%; justify-content: center; font-size: 1rem; padding: var(--space-3);">Start
+                        For Free</a>
+                </div>
 
-    <script src="script.js"></script>
+                <!-- Pro Tier (Highlighted) -->
+                <div class="pricing-card glass-card pro-tier">
+                    <div class="recommended-badge">Most Popular</div>
+                    <h3 class="tier-name">Pro</h3>
+                    <div class="price">
+                        <span class="currency">₹</span><span class="amount">299</span><span class="period">/mo</span>
+                    </div>
+                    <p class="tier-desc">Advanced features for families and power users.</p>
+                    <ul class="features-list">
+                        <li>✔️ Everything in Basic</li>
+                        <li>✔️ Expert analytics & forecasting</li>
+                        <li>✔️ Print & Export to PDF/CSV</li>
+                        <li>✔️ Premium Email Support</li>
+                    </ul>
+                    <a href="tracker.html" class="btn-primary-large"
+                        style="width: 100%; justify-content: center; font-size: 1rem; padding: var(--space-3);">Upgrade
+                        to Pro</a>
+                </div>
+
+                <!-- Enterprise Tier -->
+                <div class="pricing-card glass-card">
+                    <h3 class="tier-name">Business</h3>
+                    <div class="price">
+                        <span class="currency">₹</span><span class="amount">999</span><span class="period">/mo</span>
+                    </div>
+                    <p class="tier-desc">For small businesses needing robust tracking.</p>
+                    <ul class="features-list">
+                        <li>✔️ Everything in Pro</li>
+                        <li>✔️ Multiple team members</li>
+                        <li>✔️ API Integration</li>
+                        <li>✔️ Dedicated Account Manager</li>
+                    </ul>
+                    <a href="#" class="btn-primary-large basic-btn"
+                        style="width: 100%; justify-content: center; font-size: 1rem; padding: var(--space-3);">Contact
+                        Sales</a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mega-footer glass-card">
+        <div class="footer-grid container">
+            <div class="footer-brand">
+                <div class="logo">
+                    <span class="logo-icon">💰</span>
+                    <span class="logo-text">Smart Expense</span>
+                </div>
+                <p class="footer-desc">Your ultimate companion for financial awareness. Built with love and
+                    glassmorphism to help you achieve financial freedom.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="tracker.html">The Tracker</a></li>
+                    <li><a href="markets.html" style="color: var(--accent-purple);">Live Markets Hub</a></li>
+                    <li><a href="#pricing">Pricing</a></li>
+                    <li><a href="#how-to-use">Features</a></li>
+                    <li><a href="glossary.html">Finance Glossary</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Security</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-links">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom container">
+            <p>Smart Expense Tracker © 2026. Empowering your financial future.</p>
+            <div class="social-icons">
+                <a href="#" class="social-icon">𝕏</a>
+                <a href="#" class="social-icon">in</a>
+                <a href="#" class="social-icon">GH</a>
+            </div>
+        </div>
+    </footer>
+    <script src="market.js"></script>
 </body>
+
 </html>

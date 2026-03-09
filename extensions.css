@@ -1,0 +1,264 @@
+/* ================================================================
+   UX AND ACCESSIBILITY ENHANCEMENTS
+   ================================================================ */
+
+/* Pure CSS Tooltips */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+
+[data-tooltip]::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 110%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    background: rgba(15, 15, 25, 0.95);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+[data-tooltip]::after {
+    content: '';
+    position: absolute;
+    bottom: calc(110% - 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: rgba(15, 15, 25, 0.95) transparent transparent transparent;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+[data-tooltip]:hover::before,
+[data-tooltip]:hover::after,
+[data-tooltip]:focus::before,
+[data-tooltip]:focus::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Accessibility Focus States */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 2px solid var(--accent-purple) !important;
+    outline-offset: 4px;
+}
+
+/* Print Enhancements */
+@media print {
+
+    .navbar,
+    .footer,
+    .btn-print {
+        display: none !important;
+    }
+
+    body {
+        font-family: Arial, sans-serif !important;
+    }
+
+    [data-tooltip]::before,
+    [data-tooltip]::after {
+        display: none !important;
+        /* Hide tooltips on print */
+    }
+}
+
+/* ================================================================
+   PREMIUM POLISH (SCROLLBARS, SELECTION & LOADING)
+   ================================================================ */
+
+/* Neon Text Selection */
+::selection {
+    background-color: rgba(167, 139, 250, 0.4);
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+::-moz-selection {
+    background-color: rgba(167, 139, 250, 0.4);
+    color: #fff;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+}
+
+/* Custom Glass Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--glass-border);
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--accent-purple), var(--accent-pink));
+    border-radius: 10px;
+    border: 2px solid var(--bg-secondary);
+    /* creates padding effect */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
+}
+
+/* Fake App Boot Sequence (Pure CSS Loader) */
+.app-boot-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-base);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeOutBoot 0.5s ease-in forwards 1.2s;
+    pointer-events: none;
+}
+
+.app-boot-icon {
+    font-size: 3rem;
+    margin-bottom: var(--space-4);
+    animation: iconPulse 1s ease-in-out infinite alternate;
+}
+
+.app-boot-loader {
+    width: 200px;
+    height: 4px;
+    background: var(--glass-border);
+    border-radius: var(--radius-full);
+    position: relative;
+    overflow: hidden;
+}
+
+.app-boot-loader::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--gradient-primary);
+    border-radius: var(--radius-full);
+    box-shadow: var(--glow-purple);
+    animation: loadProgress 1s ease-out forwards;
+}
+
+@keyframes loadProgress {
+    0% {
+        width: 0%;
+    }
+
+    40% {
+        width: 60%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes iconPulse {
+    from {
+        transform: scale(1);
+        filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.5));
+    }
+
+    to {
+        transform: scale(1.1);
+        filter: drop-shadow(0 0 30px rgba(244, 114, 182, 0.8));
+    }
+}
+
+@keyframes fadeOutBoot {
+    from {
+        opacity: 1;
+        backdrop-filter: blur(20px);
+    }
+
+    to {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+        visibility: hidden;
+    }
+}
+
+/* ================================================================
+   MARKET DASHBOARD SPECIFIC STYLES
+   ================================================================ */
+
+.ticker-change {
+    padding: 2px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.ticker-up {
+    color: var(--accent-green);
+    background: rgba(52, 211, 153, 0.15);
+    text-shadow: var(--glow-green);
+    border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.ticker-down {
+    color: var(--accent-red);
+    background: rgba(251, 113, 133, 0.15);
+    text-shadow: var(--glow-red);
+    border: 1px solid rgba(251, 113, 133, 0.3);
+}
+
+.market-section-title {
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-2);
+    border-bottom: 2px solid var(--glass-border);
+}
+
+.market-section-title h3 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+#market-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)) !important;
+    gap: var(--space-5) !important;
+}
+
+@media (max-width: 600px) {
+    #market-grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)) !important;
+        gap: var(--space-4) !important;
+    }
+
+    #market-grid .stat-label {
+        font-size: 0.8rem !important;
+    }
+
+    #market-grid .stat-value {
+        font-size: 1.2rem !important;
+    }
+
+    #market-grid .ticker-change {
+        font-size: 0.7rem !important;
+        padding: 1px 4px !important;
+    }
+}

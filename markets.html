@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Markets - Smart Expense</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="extensions.css">
+    <style>
+        .hover-glow {
+            transition: all 0.3s ease;
+        }
+
+        .hover-glow:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-purple);
+            box-shadow: 0 10px 30px rgba(167, 139, 250, 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar glass-card">
+        <div class="logo">
+            <span class="logo-icon">📡</span>
+            <span class="logo-text">Live Markets</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link">Home</a></li>
+            <li><a href="tracker.html" class="nav-btn">Launch Tracker</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <header class="header" style="margin-bottom: var(--space-8);">
+            <h1>🌍 Global Market Watch</h1>
+            <p>Live Cryptocurrency and Forex exchange rates updated in real-time.</p>
+        </header>
+
+        <section class="stats-section" style="max-width: 1000px; margin: 0 auto; padding: 0 var(--space-6);">
+            <div id="market-grid" class="stats-grid" style="align-items: stretch;">
+                <!-- Market data cards will be injected here by market.js -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-footer" style="margin-top: var(--space-16);">
+        <p>Market data integrated via CoinGecko and ExchangeRate-API.</p>
+    </footer>
+
+    <script src="market.js"></script>
+</body>
+
+</html>
