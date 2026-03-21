@@ -14,8 +14,8 @@
     bottom: 110%;
     left: 50%;
     transform: translateX(-50%) translateY(10px);
-    background: rgba(15, 15, 25, 0.95);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--text-primary);
     padding: 8px 12px;
     border-radius: 8px;
     font-size: 0.75rem;
@@ -38,7 +38,7 @@
     transform: translateX(-50%);
     border-width: 6px;
     border-style: solid;
-    border-color: rgba(15, 15, 25, 0.95) transparent transparent transparent;
+    border-color: rgba(255, 255, 255, 0.95) transparent transparent transparent;
     opacity: 0;
     pointer-events: none;
     transition: all 0.3s ease;
@@ -86,17 +86,16 @@ select:focus-visible {
    PREMIUM POLISH (SCROLLBARS, SELECTION & LOADING)
    ================================================================ */
 
-/* Neon Text Selection */
 ::selection {
-    background-color: rgba(167, 139, 250, 0.4);
-    color: #fff;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    background-color: rgba(124, 58, 237, 0.2);
+    color: #000;
+    text-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
 }
 
 ::-moz-selection {
-    background-color: rgba(167, 139, 250, 0.4);
-    color: #fff;
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    background-color: rgba(124, 58, 237, 0.2);
+    color: #000;
+    text-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
 }
 
 /* Custom Glass Scrollbar */
