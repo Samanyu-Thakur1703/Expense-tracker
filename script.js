@@ -751,3 +751,71 @@ window.setMonthlyBudget = setMonthlyBudget;
 window.addSampleData = addSampleData;
 window.handleDelete = handleDelete;
 window.transactions = transactions;  // Expose data array globally
+
+// ==================== SCROLL-BASED GRADIENT ====================
+/**
+ * DYNAMIC SCROLL GRADIENT
+ * Changes background gradient colors based on scroll position
+ * Demonstrates: scroll events, requestAnimationFrame, CSS custom properties
+ */
+(function initScrollGradient() {
+    // Check if body exists (for non-DOM environments)
+    if (typeof document === 'undefined') return;
+
+    const colors = [
+        'var(--gradient-color-1)',
+        'var(--gradient-color-2)',
+        'var(--gradient-color-3)',
+        'var(--gradient-color-4)',
+        'var(--gradient-color-5)'
+    ];
+
+    let ticking = false;
+
+    // Update gradient positions based on scroll
+    function updateGradient() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
+
+        // Cycle through gradient positions based on scroll
+        const pos1 = (scrollPercent * 100 + 20) % 100;
+        const pos2 = (scrollPercent * 100 + 40) % 100;
+        const pos3 = (scrollPercent * 100 + 60) % 100;
+        const pos4 = (scrollPercent * 100 + 80) % 100;
+        const pos5 = (scrollPercent * 100) % 100;
+
+        // Apply CSS custom properties
+        document.documentElement.style.setProperty('--gradient-pos-1', pos1 + '%');
+        document.documentElement.style.setProperty('--gradient-pos-2', pos2 + '%');
+        document.documentElement.style.setProperty('--gradient-pos-3', pos3 + '%');
+        document.documentElement.style.setProperty('--gradient-pos-4', pos4 + '%');
+        document.documentElement.style.setProperty('--gradient-pos-5', pos5 + '%');
+
+        // Cycle gradient colors based on scroll position (8 color stops)
+        const colorIndex = Math.floor(scrollPercent * 8) % colors.length;
+        const nextColorIndex = (colorIndex + 1) % colors.length;
+        const blend = (scrollPercent * 8) % 1;
+
+        // Rotate colors for smooth transition
+        const newColors = [...colors.slice(colorIndex), ...colors.slice(0, colorIndex)];
+        document.documentElement.style.setProperty('--gradient-color-1', newColors[0]);
+        document.documentElement.style.setProperty('--gradient-color-2', newColors[1] || colors[0]);
+        document.documentElement.style.setProperty('--gradient-color-3', newColors[2] || colors[0]);
+        document.documentElement.style.setProperty('--gradient-color-4', newColors[3] || colors[0]);
+        document.documentElement.style.setProperty('--gradient-color-5', newColors[4] || colors[0]);
+
+        ticking = false;
+    }
+
+    // Throttled scroll handler using requestAnimationFrame
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            window.requestAnimationFrame(updateGradient);
+            ticking = true;
+        }
+    }, { passive: true });
+
+    // Initial call
+    updateGradient();
+})();
