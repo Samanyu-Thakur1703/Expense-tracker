@@ -1,166 +1,173 @@
-/**
- * SMART EXPENSE TRACKER - JavaScript Fundamentals Demonstration
- *
- * This file demonstrates core JavaScript concepts including:
- * - Variables (var, let, const) and their scope implications
- * - Data Types (Primitive and Reference)
- * - Operators, Control Flow, Functions, Closures, and Higher-Order Functions
- */
 
-// ==================== GLOBAL SCOPE ====================
-// Global variables (accessible throughout the entire script)
-// Using const for values that should not be reassigned (mutability: constant reference only)
-const APP_NAME = "Smart Expense Tracker";
-const VERSION = "1.0.0";
 
-// Global mutable state using let (block-scoped, can be reassigned)
-let transactions = [];            // Reference type: Array (mutable, passed by reference)
-let totalIncome = 0;              // Primitive type: Number
-let totalExpenses = 0;            // Primitive type: Number
-let balance = 0;                  // Primitive type: Number
-let monthlyBudget = 0;            // Primitive type: Number
-let budgetChecker = null;         // Reference type: Object (or null)
+const APP_NAME = "Smart Expense Tracker"; // const: string never changes
+const VERSION  = "1.0.0";                 // const: version string literal
 
-// Constant arrays (const prevents reassignment, but array content remains mutable)
-const incomeCategories = ["Salary", "Freelance", "Investment"];  // Reference type: Array
-const expenseCategories = ["Food", "Transport", "Shopping", "Entertainment", "Bills", "Health", "Other"];  // Array
-const allCategories = [...incomeCategories, ...expenseCategories];  // Spread operator: creates new array literal
+// let: these will be reassigned as transactions are added/removed
+let transactions   = [];    // Reference type – Array (mutable contents)
+let totalIncome    = 0;     // Primitive type – Number
+let totalExpenses  = 0;     // Primitive type – Number
+let balance        = 0;     // Primitive type – Number
+let monthlyBudget  = 0;     // Primitive type – Number
+let budgetChecker  = null;  // Reference type – Object (starts as null primitive)
 
-// ==================== UTILITY FUNCTIONS ====================
-// Function Declaration: Hoisted (can be called before declaration in code)
-// These are pure functions (no side effects, return same output for same input)
+
+// const arrays: reference (binding) is fixed, contents are mutable
+const incomeCategories  = ["Salary", "Freelance", "Investment"];
+const expenseCategories = ["Food", "Transport", "Shopping",
+                           "Entertainment", "Bills", "Health", "Other"];
+
+// Spread operator (...): creates a NEW array by expanding both arrays.
+// This is an *expression* that produces a new Array reference.
+const allCategories = [...incomeCategories, ...expenseCategories];
+
 
 /**
- * GENERATE UNIQUE ID
- * Demonstrates: expressions, Math operations, Date object
- * @returns {number} Unique identifier using timestamp + random
+ *     @returns {number}  Unique-ish numeric ID (primitive Number)
  */
 function generateId() {
-    // Date.now() returns current timestamp (primitive Number)
-    // Math.random() generates random number between 0 and 1
-    // Math.floor() rounds down to nearest integer
+    // Date.now() → primitive Number (Unix timestamp in ms)
+    // Math.random() → float [0, 1)   Math.floor() → integer
     return Date.now() + Math.floor(Math.random() * 1000);
 }
 
 /**
- * FORMAT CURRENCY
- * Demonstrates: string concatenation, Math.abs(), toFixed()
- * @param {number} amount - Amount to format (primitive Number)
- * @returns {string} Formatted currency string with ₹ symbol
+ * formatCurrency
+ *
+ * @param {number} amount  Primitive Number (passed by value)
+ * @returns {string}       Formatted string, e.g. "₹1,234.56"
  */
 function formatCurrency(amount) {
-    // Primitive Number methods: toFixed() returns string
-    // Math.abs() returns absolute value (positive)
-    // + operator for string concatenation
     return '₹' + Math.abs(amount).toFixed(2);
+
 }
 
 /**
- * GET CURRENT DATE
- * Demonstrates: Date object, String methods, padStart()
- * @returns {string} Date in DD/MM/YYYY format
+ * getCurrentDate
+ *
+ * Demonstrates:
+ *  • new Date() – creates a Date object (reference type)
+ *  • String(n)  – explicit type conversion: Number → String
+ *  • String.prototype.padStart(length, char) – pads to minimum length
+ *  • Template literal `${expression}` – ES6 string interpolation
+ *
+ * @returns {string}  Date formatted as DD/MM/YYYY
  */
 function getCurrentDate() {
-    const date = new Date();                    // Reference type: Date object
-    const day = String(date.getDate()).padStart(2, '0');   // String primitive with padStart()
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();           // Primitive Number
-    // Template literal (backticks) for string construction
-    return `${day}/${month}/${year}`;
+    const date  = new Date();                              // Reference type: Date object
+    const day   = String(date.getDate()).padStart(2, '0'); // Number → String → padded String
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-indexed
+    const year  = date.getFullYear();                     // Number
+    return `${day}/${month}/${year}`;                     // Template literal
 }
 
-// ==================== VALIDATION ====================
+
 /**
- * VALIDATE TRANSACTION
- * Demonstrates: conditionals (if/else), logical operators (||, &&), type checking
- * Call by value: primitives (description, amount) are passed by value
- * Call by reference: category (string primitive) is passed by value
- * @param {string} description - Transaction description (primitive String)
- * @param {string|number} amount - Transaction amount (could be string or number)
- * @param {string} category - Transaction category (primitive String)
- * @returns {boolean} true if valid, false otherwise
+ * validateTransaction
+
+ * @param {string}        description  Primitive String (by value)
+ * @param {string|number} amount       May be string from <input>
+ * @param {string}        category     Primitive String (by value)
+ * @returns {boolean}
  */
 function validateTransaction(description, amount, category) {
-    // Logical OR (||): short-circuits if first truthy
-    // String methods: trim(), length
-    // Strict equality (===) compares type and value
+
+    // Logical NOT (!), OR (||), strict equality (===), property access (.length)
     if (!description || description.trim() === "" || description.trim().length < 2) {
-        console.error("❌ Invalid description");  // console.error() for errors
-        return false;                             // Primitive Boolean
+        console.error("❌ Invalid description");   // console.error() – outputs to stderr
+        return false;                              // Boolean primitive
     }
 
-    // isNaN() checks if value is Not-a-Number
-    // parseFloat() converts string to Number
+    // isNaN() coerces then tests; parseFloat converts "42" → 42
     if (isNaN(amount) || amount === "" || parseFloat(amount) === 0) {
         console.error("❌ Invalid amount");
         return false;
     }
 
-    // Array.includes() checks if category exists
+    // Array.includes() – returns Boolean; short-circuit via !
     if (!category || !allCategories.includes(category)) {
         console.error("❌ Invalid category");
         return false;
     }
 
-    return true;
+    return true;  // All checks passed
 }
 
-// ==================== CRUD OPERATIONS ====================
+// ============================================================
+//  CRUD OPERATIONS
+// ============================================================
+
 /**
- * ADD TRANSACTION
- * Demonstrates: object literals, ternary operator, array methods (push), closures (outside scope)
- * @param {string} description - Transaction description
- * @param {string|number} amount - Transaction amount
- * @param {string} category - Transaction category
- * @returns {boolean} true if added successfully
+ *
+ * @param {string}        description
+ * @param {string|number} amount
+ * @param {string}        category
+ * @returns {boolean}
  */
 function addTransaction(description, amount, category) {
-    // Validation
     if (!validateTransaction(description, amount, category)) {
-        return false;
+        return false;   // Early return (guard clause)
     }
 
-    let parsedAmount = parseFloat(amount);  // Convert string to Number (primitive type)
+    // parseFloat: String → Number (primitive conversion)
+    let parsedAmount = parseFloat(amount);
 
-    // Ternary operator (condition ? true : false)
-    // Automatically handle sign based on category
+    // if / else if block: enforce sign based on category membership
     if (expenseCategories.includes(category)) {
-        parsedAmount = -Math.abs(parsedAmount);  // Make negative for expenses
+        parsedAmount = -Math.abs(parsedAmount);  // Expenses are negative
     } else if (incomeCategories.includes(category)) {
-        parsedAmount = Math.abs(parsedAmount);   // Make positive for income
+        parsedAmount = Math.abs(parsedAmount);   // Income is positive
     }
 
-    // Object literal: Creating a new transaction object (reference type)
+    // Object literal: groups related primitives into one Reference type
     const newTransaction = {
-        id: generateId(),                      // Number (primitive)
-        description: description.trim(),       // String (primitive)
-        amount: parsedAmount,                  // Number (primitive)
-        category: category,                    // String (primitive)
-        type: parsedAmount >= 0 ? "Income" : "Expense",  // Ternary operator
-        date: getCurrentDate(),               // String (primitive)
-        timestamp: Date.now()                 // Number (primitive, Unix timestamp for sorting)
+        id:          generateId(),            // Number
+        description: description.trim(),      // String
+        amount:      parsedAmount,            // Number
+        category:    category,                // String
+        // Ternary operator: condition ? trueValue : falseValue
+        type:        parsedAmount >= 0 ? "Income" : "Expense",
+        date:        getCurrentDate(),        // String
+        timestamp:   Date.now()              // Number – used for sorting
     };
 
-    // Array method: push() adds element to end (mutates original array)
-    transactions.push(newTransaction);
-    console.log("✅ Transaction added!");     // console.log() for info
-    console.table([newTransaction]);         // console.table() displays array of objects as table
-
-    updateAll();  // Call another function (nested function call)
+    transactions.push(newTransaction);        // Array.push() mutates in-place
+    console.log("✅ Transaction added!");
+    console.table([newTransaction]);          // console.table() – tabular output
+    updateAll();
     return true;
 }
 
-// Function Expression: Assigned to variable (not hoisted)
-// Can be anonymous or named
-const deleteTransaction = function(id) {
-    // Linear search algorithm: for loop
-    let index = -1;  // Initialize with sentinel value
+// ──────────────────────────────────────────────────────────
+//  FUNCTION EXPRESSION
+//  Assigned to a variable; NOT hoisted (only the variable
+//  declaration is hoisted, with value undefined).
+//  Can be anonymous (no name after `function`).
+// ──────────────────────────────────────────────────────────
 
-    // For loop: traditional iteration (counter-based)
+/**
+ * deleteTransaction
+ *
+ * FUNCTION EXPRESSION (anonymous, assigned to const).
+ *
+ * Demonstrates:
+ *  • Traditional for loop  (init ; condition ; update)
+ *  • Sentinel value pattern  (index = -1)
+ *  • break  – exits loop early once match found
+ *  • Strict equality (===) for ID comparison
+ *  • Array.prototype.splice(start, deleteCount) – mutates array
+ *
+ * @param {number} id  ID of transaction to delete
+ * @returns {boolean}
+ */
+const deleteTransaction = function(id) {
+    let index = -1;  // Sentinel: -1 means "not found yet"
+
+    // for loop: counter-based iteration; index i is needed here
     for (let i = 0; i < transactions.length; i++) {
-        if (transactions[i].id === id) {  // Strict equality (===)
+        if (transactions[i].id === id) {  // strict equality (===)
             index = i;
-            break;  // break: exits the loop early when found
+            break;   // break: stop iterating once found
         }
     }
 
@@ -169,129 +176,177 @@ const deleteTransaction = function(id) {
         return false;
     }
 
-    // Array.splice() mutates array by removing element at index
-    transactions.splice(index, 1);  // Remove 1 element at position index
+    // splice(start, deleteCount) mutates the original array
+    transactions.splice(index, 1);
     console.log("🗑️ Deleted");
     updateAll();
     return true;
 };
 
-// Arrow Function Expression: Concise syntax, lexical this
+/**
+
+ * @returns {boolean}
+ */
 const clearAllTransactions = () => {
-    // Check if array is empty (length property)
     if (transactions.length === 0) {
-        console.warn("⚠️ No transactions");  // console.warn() for warnings
+        console.warn("⚠️ No transactions");  // console.warn() – yellow warning
         return false;
     }
 
-    // Reassign global variable (primitive assignment)
-    transactions = [];  // Empty array (new reference)
+    transactions = [];  // Reassign (only possible because `transactions` is let)
     console.log("🧹 Cleared");
     updateAll();
     return true;
 };
 
-// ==================== CALCULATIONS ====================
-// Arrow Functions: Concise, single-expression, implicit return
-// Callback functions passed to array methods (higher-order functions)
-
-// Array.filter() creates new array with elements that pass test
-// Higher-order function: takes function as argument (predicate)
-// Implicit return for single-expression arrow functions
-const calculateTotalIncome = () => transactions
-    .filter(t => t.amount > 0)                           // filter(): Higher-Order Function
-    .reduce((sum, t) => sum + t.amount, 0);             // reduce(): Accumulator pattern
-
-const calculateTotalExpenses = () => Math.abs(
-    transactions
-        .filter(t => t.amount < 0)
-        .reduce((sum, t) => sum + t.amount, 0)           // Sum negative amounts
-);
-
-// Arrow function with block body (needs explicit return)
-const calculateBalance = () => {
-    // Accessing outer scope variables (closure)
-    // Primitive values: totalIncome and totalExpenses are accessed directly
-    return totalIncome - totalExpenses;
-};
-
-// Function updating multiple global variables
-const updateTotals = () => {
-    totalIncome = calculateTotalIncome();      // Assignment operator (=)
-    totalExpenses = calculateTotalExpenses();
-    balance = calculateBalance();
-};
-
-// ==================== FILTERING & SORTING ====================
-// Demonstrates: switch statements, array methods, closures
 
 /**
- * FILTER BY TYPE
- * Demonstrates: switch statement, return in each case
- * @param {string} type - "income", "expense", or "all"
- * @returns {Array} Filtered array (new array)
+
+ *
+ * @returns {number}  Total income (primitive)
+ */
+const calculateTotalIncome = () =>
+    transactions
+        .filter(t => t.amount > 0)               // HOF: filter with arrow callback
+        .reduce((sum, t) => sum + t.amount, 0);  // HOF: reduce; 0 is initial accumulator
+
+/**
+ * calculateTotalExpenses
+ *
+ * Chained filter + reduce, wrapped in Math.abs() to return positive value.
+ * Arrow function with implicit return.
+ *
+ * @returns {number}  Total expenses (positive Number)
+ */
+const calculateTotalExpenses = () => Math.abs(
+    transactions
+        .filter(t => t.amount < 0)               // filter: only negative (expense) amounts
+        .reduce((sum, t) => sum + t.amount, 0)   // reduce: accumulates negative sum
+);
+
+/**
+ * calculateBalance
+ *
+ * Arrow function with BLOCK BODY (explicit return required).
+ * Accesses outer-scope `let` variables – this is a CLOSURE.
+ *
+ * CLOSURE: A function that retains access to variables from its
+ * enclosing (lexical) scope even after that scope has returned.
+ * Here, calculateBalance "closes over" totalIncome & totalExpenses.
+ *
+ * @returns {number}
+ */
+const calculateBalance = () => {
+    return totalIncome - totalExpenses;  // References outer let variables (closure)
+};
+
+/**
+ * updateTotals
+ *
+ * Calls the calculation functions and stores results in global let variables.
+ */
+const updateTotals = () => {
+    totalIncome   = calculateTotalIncome();
+    totalExpenses = calculateTotalExpenses();
+    balance       = calculateBalance();
+};
+
+// ============================================================
+//  FILTERING & SORTING  (switch, for...of, HOFs)
+// ============================================================
+
+/**
+ * filterByType
+ *
+ * Demonstrates:
+ *  • switch statement – compares type using ===
+ *  • return inside each case (avoids need for break)
+ *  • default case – fallback when no case matches
+ *  • filter() HOF – returns NEW array
+ *
+ * @param {string} type  "income" | "expense" | "all"
+ * @returns {Array}      New filtered array
  */
 const filterByType = (type) => {
-    // Switch statement: multiple condition branches
+    // switch: cleaner than multiple if/else when testing one variable
     switch (type) {
         case "income":
-            // filter() returns NEW array (does not mutate original)
-            return transactions.filter(t => t.amount > 0);
+            return transactions.filter(t => t.amount > 0);  // HOF: filter
         case "expense":
             return transactions.filter(t => t.amount < 0);
-        default:  // Fallback case
-            return transactions;  // Return reference to original array
+        default:                                             // fallback case
+            return transactions;
     }
 };
 
-// Arrow function with single parameter, concise body
+/**
+ * filterByCategory
+ *
+ * Arrow function: single parameter (parens optional for one param).
+ * Ternary returns either all transactions or a filtered subset.
+ *
+ * @param {string} category
+ * @returns {Array}
+ */
 const filterByCategory = (category) => {
-    // Ternary operator for conditional return
-    return category === "all" ? transactions : transactions.filter(t => t.category === category);
+    // Ternary: concise if/else for simple conditionals
+    return category === "all"
+        ? transactions
+        : transactions.filter(t => t.category === category); // HOF: filter
 };
 
-// Function that reads DOM and returns filtered data
+/**
+ * getFilteredTransactions
+ *
+ * Reads DOM values and chains filter operations.
+ *
+ * Demonstrates:
+ *  • DOM API: document.getElementById().value
+ *  • if statements with !== operator
+ *  • HOF: filter with closure over categoryFilter variable
+ *
+ * @returns {Array}  Filtered transactions array
+ */
 const getFilteredTransactions = () => {
-    // DOM manipulation: getElementById() returns Element or null
-    const typeFilter = document.getElementById('filter-type').value;  // .value property (string)
+    const typeFilter     = document.getElementById('filter-type').value;
     const categoryFilter = document.getElementById('filter-category').value;
 
-    let result = transactions;  // Start with all transactions
+    let result = transactions;
 
-    // if statements (multiple conditions)
     if (typeFilter !== "all") {
-        // Nested function call: filterByType() returns array (reference)
         result = filterByType(typeFilter);
     }
     if (categoryFilter !== "all") {
-        // Array.filter() with arrow function (lexical this, closure on categoryFilter)
+        // Arrow function closes over categoryFilter (closure)
         result = result.filter(t => t.category === categoryFilter);
     }
 
-    return result;  // Returns array (reference type)
+    return result;
 };
 
 /**
- * SORT TRANSACTIONS
- * Demonstrates: array spreading [...], sort() with compare function, switch
- * @param {Array} arr - Array to sort (reference)
- * @param {string} sortType - Sorting criterion
- * @returns {Array} Sorted array (new array, original not mutated due to spread)
+ * sortTransactions
+ *
+ * Demonstrates:
+ *  • Spread operator [...arr] – shallow copy to avoid mutating original
+ *  • sort() HOF – compare function returns negative / 0 / positive
+ *  • Math.abs() inside comparator for absolute-value comparison
+ *  • switch with return in each case
+ *
+ * @param {Array}  arr       Array to sort (not mutated – we spread first)
+ * @param {string} sortType  Sorting criterion
+ * @returns {Array}          New sorted array
  */
 const sortTransactions = (arr, sortType) => {
-    // Spread operator: creates shallow copy (new array with same object references)
-    const sorted = [...arr];
+    const sorted = [...arr];  // Spread: shallow copy (new array, same object refs)
 
     switch (sortType) {
         case "date-desc":
-            // sort() mutates array but we're sorting copy
-            // Compare function: returns negative, 0, positive
-            // Subtraction: numeric comparison
+            // sort() HOF: b - a → descending (largest timestamp first)
             return sorted.sort((a, b) => b.timestamp - a.timestamp);
         case "date-asc":
             return sorted.sort((a, b) => a.timestamp - b.timestamp);
         case "amount-desc":
-            // Math.abs() for absolute value comparison
             return sorted.sort((a, b) => Math.abs(b.amount) - Math.abs(a.amount));
         case "amount-asc":
             return sorted.sort((a, b) => Math.abs(a.amount) - Math.abs(b.amount));
@@ -300,107 +355,125 @@ const sortTransactions = (arr, sortType) => {
     }
 };
 
-// ==================== STATISTICS ====================
-// Demonstrates: reduce() with accumulator, Math.max/min, Object methods
+// ============================================================
+//  STATISTICS  (reduce patterns, Math methods)
+// ============================================================
 
 /**
- * GET AVERAGE TRANSACTION
- * Demonstrates: ternary (if empty), reduce() for aggregation
- * @returns {number} Average transaction amount (primitive)
+ * getAverageTransaction
+ *
+ * Demonstrates:
+ *  • Guard clause with ternary for empty-array edge case
+ *  • reduce() HOF accumulating sum, then dividing by length
+ *
+ * @returns {number}  Average absolute transaction amount
  */
 const getAverageTransaction = () => {
-    // Ternary operator for boundary check
-    if (transactions.length === 0) return 0;
-    // reduce(): sum all amounts then divide
-    return transactions.reduce((sum, t) => sum + Math.abs(t.amount), 0) / transactions.length;
+    if (transactions.length === 0) return 0;  // Guard clause
+
+    // reduce: accumulate sum of absolute amounts, then divide
+    return transactions.reduce(
+        (sum, t) => sum + Math.abs(t.amount), 0
+    ) / transactions.length;
 };
 
 /**
- * GET LARGEST INCOME
- * Demonstrates: filter + reduce, nested ternary
- * @returns {number} Largest income amount
+ * getLargestIncome
+ *
+ * Demonstrates:
+ *  • filter() then reduce() chained
+ *  • reduce() as a max-finder (ternary inside callback)
+ *
+ * @returns {number}
  */
 const getLargestIncome = () => {
-    const incomes = transactions.filter(t => t.amount > 0);  // Filter incomes
+    const incomes = transactions.filter(t => t.amount > 0);
     if (incomes.length === 0) return 0;
-    // reduce() with comparison: finds maximum
+    // reduce as maximum-finder: keep larger of accumulator vs current
     return incomes.reduce((max, t) => t.amount > max ? t.amount : max, 0);
 };
 
 /**
- * GET LARGEST EXPENSE
- * Demonstrates: reduce with Math.abs
- * @returns {number} Largest expense (absolute value)
+ * getLargestExpense
+ *
+ * Demonstrates:
+ *  • reduce() as minimum-finder (most negative number)
+ *  • Math.abs() converts result to positive
+ *
+ * @returns {number}
  */
 const getLargestExpense = () => {
     const expenses = transactions.filter(t => t.amount < 0);
     if (expenses.length === 0) return 0;
-    // Ternary inside reduce: track minimum (most negative)
-    return Math.abs(expenses.reduce((min, t) => t.amount < min ? t.amount : min, 0));
+    // reduce: track minimum (most negative); Math.abs makes it positive
+    return Math.abs(
+        expenses.reduce((min, t) => t.amount < min ? t.amount : min, 0)
+    );
 };
 
 /**
- * GET EXPENSES BY CATEGORY
- * Demonstrates: reduce() building object accumulator
- * @returns {Object} Object with category keys and summed amounts
+ * getExpensesByCategory
+ *
+ * Demonstrates:
+ *  • reduce() building an OBJECT accumulator (not a number)
+ *  • Bracket notation: acc[cat] (dynamic property access)
+ *  • Logical OR default: (acc[cat] || 0) initialises missing keys
+ *
+ * @returns {Object}  { "Food": 4500, "Transport": 1200, ... }
  */
 const getExpensesByCategory = () => {
     return transactions
-        .filter(t => t.amount < 0)
-        .reduce((acc, t) => {
-            // Object property access: bracket notation (dynamic)
+        .filter(t => t.amount < 0)       // HOF: keep expenses only
+        .reduce((acc, t) => {            // HOF: build object accumulator
             const cat = t.category;
-            // Logical OR for default: acc[cat] || 0
+            // (acc[cat] || 0): if key absent → 0; otherwise existing total
             acc[cat] = (acc[cat] || 0) + Math.abs(t.amount);
-            return acc;  // Must return accumulator for next iteration
-        }, {});  // Initial value: empty object (reference type)
+            return acc;                  // MUST return accumulator each iteration
+        }, {});                          // Initial value: empty object {}
 };
 
-// ==================== BUDGET CLOSURE ====================
-// Demonstrates: Closures (factory function returning object with private state)
-// Object methods, lexical scope
+
 
 /**
- * CREATE BUDGET CHECKER (Closure Factory)
- * Demonstrates: closures - returned object retains access to budgetLimit variable
- * @param {number} limit - Monthly budget limit
- * @returns {Object} Budget checker object with methods checking spending
+ * @param {number} limit  Monthly spending limit
+ * @returns {Object}      Budget checker with methods
  */
 function createBudgetChecker(limit) {
-    let budgetLimit = limit;  // Private variable captured by closure
+    // budgetLimit is a PRIVATE variable (closed over by returned methods)
+    let budgetLimit = limit;
 
-    // Return object literal with methods (closures accessing budgetLimit)
     return {
-        // Method: check expenses against budget
+        // check() – closure: reads & uses budgetLimit from outer scope
         check: function(expenses) {
-            // Arithmetic with division and multiplication
-            const percentage = (expenses / budgetLimit) * 100;
+            const percentage = (expenses / budgetLimit) * 100;  // Arithmetic
             let status, message;
 
-            // Nested if/else if/else chain
+            // if / else if / else chain – sequential condition evaluation
             if (percentage >= 100) {
-                status = "danger";
+                status  = "danger";
                 message = "🚨 Budget EXCEEDED!";
             } else if (percentage >= 80) {
-                status = "warning";
+                status  = "warning";
                 message = "⚠️ Approaching limit!";
             } else if (percentage >= 50) {
-                status = "caution";
+                status  = "caution";
                 message = "📊 Over half used.";
             } else {
-                status = "safe";
+                status  = "safe";
                 message = "✅ Within budget!";
             }
 
-            // Object literal return
+            // Shorthand property names (ES6): { status } ≡ { status: status }
             return { status, message, percentage, remaining: budgetLimit - expenses };
         },
-        // Getter method (getter pattern)
+
+        // getter – returns private closed-over variable
         getLimit: function() { return budgetLimit; },
-        // Setter method with validation
+
+        // setter with validation – mutates the closed-over variable
         setLimit: function(newLimit) {
             if (newLimit > 0) {
-                budgetLimit = newLimit;  // Modifies closed-over variable
+                budgetLimit = newLimit;  // Modifies closed-over private variable
                 return true;
             }
             return false;
@@ -409,101 +482,120 @@ function createBudgetChecker(limit) {
 }
 
 /**
- * SET MONTHLY BUDGET
- * @param {number} amount - Budget amount
- * @returns {boolean} true if set successfully
+ * setMonthlyBudget
+ *
+ * Function Declaration. Validates input, then calls the closure factory.
+ *
+ * @param {number|string} amount
+ * @returns {boolean}
  */
 function setMonthlyBudget(amount) {
-    // Validation: isNaN(), comparison
     if (isNaN(amount) || amount <= 0) {
         console.error("❌ Invalid budget");
         return false;
     }
 
-    monthlyBudget = parseFloat(amount);           // Convert to Number
-    budgetChecker = createBudgetChecker(monthlyBudget);  // Store closure
+    monthlyBudget = parseFloat(amount);
+    // budgetChecker stores the closure object (reference type)
+    budgetChecker = createBudgetChecker(monthlyBudget);
     console.log("💰 Budget: " + formatCurrency(monthlyBudget));
     updateBudgetDisplay();
     return true;
 }
 
-// ==================== DISPLAY FUNCTIONS ====================
-// Demonstrates: DOM manipulation, template literals, array methods
+// ============================================================
+//  DOM DISPLAY FUNCTIONS
+// ============================================================
+//
+//  DOM (Document Object Model) – browser's tree of HTML elements.
+//  document.getElementById(id) – returns an HTMLElement or null.
+//  element.textContent – sets/gets visible text (safe: no HTML parsing).
+//  element.innerHTML   – sets/gets raw HTML string (use carefully).
+//  element.classList.add/remove/toggle – CSS class management.
+//  element.style.property – inline CSS manipulation.
 
 /**
- * DISPLAY BALANCE
- * Demonstrates: DOM methods (getElementById), classList API, conditional classes
+ * displayBalance
+ *
+ * Demonstrates:
+ *  • DOM query: getElementById
+ *  • classList.remove(multiple) – removes several classes at once
+ *  • classList.add – applies conditional CSS class
+ *  • if / else if for conditional class application
  */
 const displayBalance = () => {
-    const el = document.getElementById('balance');  // Returns HTMLElement or null
-    // Template literal with string interpolation
-    el.textContent = formatCurrency(balance);
+    const el = document.getElementById('balance');
+    el.textContent = formatCurrency(balance);      // textContent assignment
 
-    // classList methods: remove() and add()
-    el.classList.remove('positive', 'negative');  // Remove multiple classes
+    el.classList.remove('positive', 'negative');   // Remove both, then add correct one
 
-    // Nested if/else for conditional class application
     if (balance > 0) {
         el.classList.add('positive');
     } else if (balance < 0) {
         el.classList.add('negative');
     }
+    // if balance === 0, neither class is added
 };
 
-/**
- * DISPLAY TOTALS
- * Demonstrates: getElementById, textContent assignment
- */
+/** displayTotals – updates income & expense DOM elements */
 const displayTotals = () => {
-    document.getElementById('total-income').textContent = '+' + formatCurrency(totalIncome);
+    document.getElementById('total-income').textContent   = '+' + formatCurrency(totalIncome);
     document.getElementById('total-expenses').textContent = '-' + formatCurrency(totalExpenses);
 };
 
 /**
- * UPDATE BUDGET DISPLAY
- * Demonstrates: style manipulation, conditional logic, template literals
+ * updateBudgetDisplay
+ *
+ * Demonstrates:
+ *  • Number.prototype.toFixed(2) – formats number to 2 decimal places
+ *  • Calling closure method: budgetChecker.check()
+ *  • Math.min() – clamps value to maximum of 100
+ *  • style.width – inline CSS via JavaScript
+ *  • Template literals for dynamic className
  */
 const updateBudgetDisplay = () => {
-    // .toFixed() on number to format decimal
     document.getElementById('budget-amount').textContent = monthlyBudget.toFixed(2);
-    document.getElementById('spent-amount').textContent = totalExpenses.toFixed(2);
+    document.getElementById('spent-amount').textContent  = totalExpenses.toFixed(2);
 
     const progressFill = document.getElementById('progress-fill');
     const budgetStatus = document.getElementById('budget-status');
 
-    if (monthlyBudget > 0 && budgetChecker) {
-        // Closer method call: budgetChecker.check()
-        const result = budgetChecker.check(totalExpenses);
-        const pct = Math.min(result.percentage, 100);  // Math.min() restricts to 100%
+    if (monthlyBudget > 0 && budgetChecker) {        // Logical AND (&&)
+        const result = budgetChecker.check(totalExpenses);  // Closure method call
+        const pct    = Math.min(result.percentage, 100);    // Clamp to 100
 
-        // DOM style manipulation
-        progressFill.style.width = pct + '%';            // String concatenation
-        // Template literal with dynamic class
+        progressFill.style.width = pct + '%';
+        // Template literal produces dynamic class string
         progressFill.className = `progress-fill ${result.status}`;
-        budgetStatus.className = `budget-status ${result.status}`;
+        budgetStatus.className  = `budget-status ${result.status}`;
         budgetStatus.textContent = result.message;
     } else {
-        progressFill.style.width = '0%';
-        progressFill.className = 'progress-fill';
-        budgetStatus.className = 'budget-status';
-        budgetStatus.textContent = 'Set a budget to track spending';
+        progressFill.style.width     = '0%';
+        progressFill.className       = 'progress-fill';
+        budgetStatus.className       = 'budget-status';
+        budgetStatus.textContent     = 'Set a budget to track spending';
     }
 };
 
 /**
- * DISPLAY TRANSACTIONS
- * Demonstrates: map(), join(), template literals in loops, conditional classes
+ * displayTransactions
+ *
+ * Demonstrates:
+ *  • map() HOF – transforms each transaction into an HTML string
+ *  • Array.prototype.join('') – concatenates array of strings
+ *  • Template literals with embedded expressions
+ *  • Ternary inside template literal for conditional class/prefix
+ *  • innerHTML – injects HTML string into DOM
+ *  • classList.add / remove  for show/hide
  */
 const displayTransactions = () => {
     let filtered = getFilteredTransactions();
-    // Call higher-order function with comparator
     filtered = sortTransactions(filtered, document.getElementById('sort-by').value);
 
-    // .textContent assignment with template literal
-    document.getElementById('transaction-count').textContent = filtered.length + ' transactions';
+    document.getElementById('transaction-count').textContent =
+        filtered.length + ' transactions';  // String concatenation
 
     const clearBtn = document.getElementById('clear-all-btn');
-    // Conditional class toggle
     if (transactions.length > 0) {
         clearBtn.classList.remove('hidden');
     } else {
@@ -517,13 +609,13 @@ const displayTransactions = () => {
         return;
     }
 
-    // Array.map(): transform each element (higher-order function)
-    // Returns new array of HTML strings (template literals)
+    // map() HOF: transform each transaction object into an HTML string
+    // join('') merges the resulting array into one large HTML string
     listEl.innerHTML = filtered.map(t => {
-        const typeClass = t.amount >= 0 ? 'income' : 'expense';  // Ternary
-        const prefix = t.amount >= 0 ? '+' : '-';
+        // Ternary operators inside template literals
+        const typeClass = t.amount >= 0 ? 'income' : 'expense';
+        const prefix    = t.amount >= 0 ? '+' : '-';
 
-        // Template literal with multi-line string and expressions
         return `
             <div class="transaction-item ${typeClass}">
                 <div class="transaction-info">
@@ -537,37 +629,43 @@ const displayTransactions = () => {
                 <button class="btn btn-delete" onclick="handleDelete(${t.id})">✕</button>
             </div>
         `;
-    }).join('');  // join() concatenates array elements into single string
+    }).join('');  // join: Array → String
 };
 
 /**
- * DISPLAY STATISTICS
- * Demonstrates: Object.keys(), Math.max with spread operator, sort with comparator
+ * displayStatistics
+ *
+ * Demonstrates:
+ *  • Object.keys(obj)   – returns array of own property keys
+ *  • Object.values(obj) – returns array of own property values
+ *  • Spread into Math.max(...values) – passes array elements as args
+ *  • sort() with comparator for descending order
+ *  • map() + join() pattern for HTML generation
  */
 const displayStatistics = () => {
-    document.getElementById('stat-total').textContent = transactions.length;
-    document.getElementById('stat-average').textContent = formatCurrency(getAverageTransaction());
+    document.getElementById('stat-total').textContent          = transactions.length;
+    document.getElementById('stat-average').textContent        = formatCurrency(getAverageTransaction());
     document.getElementById('stat-largest-income').textContent = formatCurrency(getLargestIncome());
     document.getElementById('stat-largest-expense').textContent = formatCurrency(getLargestExpense());
 
-    const categoryData = getExpensesByCategory();  // Returns object (reference)
-    const categories = Object.keys(categoryData);  // Returns array of keys (new array)
-    const containerEl = document.getElementById('category-stats');
+    const categoryData = getExpensesByCategory();       // Object reference
+    const categories   = Object.keys(categoryData);    // Array of key strings
+    const containerEl  = document.getElementById('category-stats');
 
     if (categories.length === 0) {
         containerEl.innerHTML = '<p class="empty-message">No expense data</p>';
         return;
     }
 
-    // Spread operator to convert values to array for Math.max()
+    // Spread Object.values() into Math.max() — spread turns array into arg list
     const maxAmount = Math.max(...Object.values(categoryData));
-    // Array.sort() with comparator (mutates copy, not original)
-    categories.sort((a, b) => categoryData[b] - categoryData[a]);  // Descending sort
+
+    // sort() HOF with comparator – descending by amount (mutates categories copy)
+    categories.sort((a, b) => categoryData[b] - categoryData[a]);
 
     containerEl.innerHTML = categories.map(cat => {
         const amount = categoryData[cat];
-        // Division and multiplication for percentage
-        const pct = (amount / maxAmount) * 100;
+        const pct    = (amount / maxAmount) * 100;  // Arithmetic: percentage
 
         return `
             <div class="category-item">
@@ -581,128 +679,154 @@ const displayStatistics = () => {
     }).join('');
 };
 
-// ==================== UPDATE ALL ====================
+// ============================================================
+//  FUNCTION COMPOSITION  –  updateAll
+// ============================================================
+
 /**
- * UPDATE ALL DISPLAYS
- * Demonstrates: function composition (calling multiple functions)
- * Central update function that refreshes all UI components
+ * updateAll
+ *
+ * Central orchestrator: calls each display function in sequence.
+ * Demonstrates FUNCTION COMPOSITION – calling multiple functions
+ * to produce a combined effect (refresh entire UI).
+ *
+ * Function Declaration – hoisted, can be called above its definition.
  */
 function updateAll() {
-    updateTotals();              // Recalculate sums
-    displayBalance();            // Update balance display
-    displayTotals();             // Update income/expense totals
-    displayTransactions();      // Update transaction list
-    displayStatistics();        // Update statistics panel
-    updateBudgetDisplay();      // Update budget progress
+    updateTotals();          // 1. Recalculate income / expenses / balance
+    displayBalance();        // 2. Update balance element
+    displayTotals();         // 3. Update income & expense totals
+    displayTransactions();   // 4. Rebuild transaction list
+    displayStatistics();     // 5. Rebuild statistics panel
+    updateBudgetDisplay();   // 6. Update budget progress bar
 }
 
-// ==================== EVENT HANDLERS ====================
-// Demonstrates: event objects, preventDefault(), DOM form handling
+// ============================================================
+//  EVENT HANDLERS
+// ============================================================
+//
+//  Events are asynchronous signals (user interactions, timers, etc.)
+//  An event handler (listener) is a function called when an event fires.
+//  addEventListener(type, callback) – preferred (can attach multiple).
+//  Inline onclick="fn()" – attaches single handler via HTML attribute.
 
 /**
- * HANDLE FORM SUBMIT
- * Demonstrates: event.preventDefault(), form reset, focus management
- * @param {Event} event - DOM submit event object
+ * handleFormSubmit
+ *
+ * Demonstrates:
+ *  • event.preventDefault() – stops the default browser action (page reload)
+ *  • DOM value retrieval from form inputs
+ *  • element.reset() – clears all form fields
+ *  • element.focus() – moves cursor to element
+ *
+ * @param {Event} event  DOM Event object (reference type, passed by reference)
  */
 function handleFormSubmit(event) {
-    event.preventDefault();  // Prevent form submission (page reload)
+    event.preventDefault();  // Stop form from submitting (and reloading page)
 
-    // DOM value retrieval
-    const desc = document.getElementById('description').value;
-    const amount = document.getElementById('amount').value;
+    const desc     = document.getElementById('description').value;
+    const amount   = document.getElementById('amount').value;
     const category = document.getElementById('category').value;
 
     if (addTransaction(desc, amount, category)) {
-        // Form reset: clear all inputs
-        document.getElementById('transaction-form').reset();
-        // Set focus to description field for next entry
-        document.getElementById('description').focus();
+        document.getElementById('transaction-form').reset();  // Clear all fields
+        document.getElementById('description').focus();       // Move cursor to first field
     }
 }
 
 /**
- * HANDLE DELETE
- * Demonstrates: confirm() dialog, function call in onclick attribute
- * @param {number} id - Transaction ID to delete
+ * handleDelete
+ *
+ * Demonstrates:
+ *  • window.confirm() – shows browser dialog; returns Boolean
+ *  • Conditional function call
+ *
+ * @param {number} id  Transaction ID (primitive Number, passed by value)
  */
 function handleDelete(id) {
-    // confirm() returns boolean (primitive)
-    if (confirm('Delete this transaction?')) {
+    if (confirm('Delete this transaction?')) {  // confirm() returns true/false
         deleteTransaction(id);
     }
 }
 
-/**
- * HANDLE SET BUDGET
- * Demonstrates: input value retrieval, clear after submit
- */
+/** handleSetBudget – reads budget input and calls setMonthlyBudget */
 function handleSetBudget() {
     const amount = document.getElementById('budget-input').value;
     if (setMonthlyBudget(amount)) {
-        document.getElementById('budget-input').value = '';  // Clear input field
+        document.getElementById('budget-input').value = '';  // Clear field
     }
 }
 
-/**
- * HANDLE FILTER CHANGE
- * Event handler: called when filter dropdowns change
- */
+/** handleFilterChange – re-renders list when filter dropdowns change */
 function handleFilterChange() {
-    displayTransactions();  // Refresh list with new filters
+    displayTransactions();
 }
 
-/**
- * HANDLE CLEAR ALL
- * Demonstrates: confirm() with destructive operation
- */
+/** handleClearAll – confirms then clears all data */
 function handleClearAll() {
     if (confirm('Delete ALL transactions?')) {
         clearAllTransactions();
     }
 }
 
-// ==================== SAMPLE DATA ====================
+// ============================================================
+//  SAMPLE DATA  (for...of loop, array of objects)
+// ============================================================
+
 /**
- * ADD SAMPLE DATA
- * Demonstrates: array iteration, calling addTransaction in loop
- * Function declaration (hoisted, can be called anywhere)
+ * addSampleData
+ *
+ * Function Declaration – hoisted.
+ *
+ * Demonstrates:
+ *  • Array of object literals  [{ }, { }, ...]
+ *  • for...of loop – iterates over iterable VALUES (no index needed)
+ *    Contrast with for...in (iterates over keys/indices)
+ *  • console.log() with string concatenation
+ *
+ * Usage: type addSampleData() in browser console to load demo data.
  */
 function addSampleData() {
     console.log("📝 Adding sample data...");
 
-    // Array literal with objects (reference types)
+    // Array of plain objects (reference types inside reference type)
     const samples = [
-        { desc: "Salary", amount: 75000, cat: "Salary" },
-        { desc: "Freelance", amount: 15000, cat: "Freelance" },
-        { desc: "Dividends", amount: 3000, cat: "Investment" },
-        { desc: "Groceries", amount: -4500, cat: "Food" },
-        { desc: "Restaurant", amount: -1800, cat: "Food" },
-        { desc: "Uber", amount: -1200, cat: "Transport" },
-        { desc: "Petrol", amount: -3000, cat: "Transport" },
-        { desc: "Amazon", amount: -5500, cat: "Shopping" },
-        { desc: "Movie", amount: -800, cat: "Entertainment" },
-        { desc: "Netflix", amount: -499, cat: "Entertainment" },
-        { desc: "Electricity", amount: -2500, cat: "Bills" },
-        { desc: "Internet", amount: -999, cat: "Bills" },
-        { desc: "Medicine", amount: -650, cat: "Health" }
+        { desc: "Salary",       amount:  75000, cat: "Salary"        },
+        { desc: "Freelance",    amount:  15000, cat: "Freelance"      },
+        { desc: "Dividends",    amount:   3000, cat: "Investment"     },
+        { desc: "Groceries",    amount:  -4500, cat: "Food"           },
+        { desc: "Restaurant",   amount:  -1800, cat: "Food"           },
+        { desc: "Uber",         amount:  -1200, cat: "Transport"      },
+        { desc: "Petrol",       amount:  -3000, cat: "Transport"      },
+        { desc: "Amazon",       amount:  -5500, cat: "Shopping"       },
+        { desc: "Movie",        amount:   -800, cat: "Entertainment"  },
+        { desc: "Netflix",      amount:   -499, cat: "Entertainment"  },
+        { desc: "Electricity",  amount:  -2500, cat: "Bills"          },
+        { desc: "Internet",     amount:   -999, cat: "Bills"          },
+        { desc: "Medicine",     amount:   -650, cat: "Health"         }
     ];
 
-    // For...of loop: iterates iterable values (array elements)
-    // Modern loop replacing traditional for when index isn't needed
+    // for...of: iterates each element value; t is a copy of the object reference
     for (let t of samples) {
         addTransaction(t.desc, t.amount, t.cat);
     }
 
     setMonthlyBudget(25000);
-
     console.log("✅ Done! " + transactions.length + " transactions added.");
 }
 
-// ==================== INITIALIZATION ====================
 /**
- * INITIALIZE APPLICATION
- * Demonstrates: addEventListener(), initialization pattern
- * IIFE-like: runs when script loads via DOMContentLoaded
+ * init
+ *
+ * Function Declaration – hoisted.
+ * Called when DOM is fully parsed (DOMContentLoaded).
+ *
+ * Demonstrates:
+ *  • addEventListener(type, callback) – event-driven programming
+ *  • Passing FUNCTION REFERENCES (no parentheses) as callbacks
+ *  • Anonymous arrow function as inline callback
+ *  • Keyboard event: e.key property
+ *  • IIFE-adjacent pattern: runs once at page load
  */
 function init() {
     console.log("═══════════════════════════════════════");
@@ -711,56 +835,55 @@ function init() {
     console.log("📌 Type: addSampleData()");
     console.log("═══════════════════════════════════════");
 
-    // Event listeners: passing function references (no parentheses)
-    // Demonstrates: callback pattern, event-driven programming
-    document.getElementById('transaction-form').addEventListener('submit', handleFormSubmit);
-    document.getElementById('set-budget-btn').addEventListener('click', handleSetBudget);
+    // addEventListener(eventType, callbackReference)
+    // Note: handleFormSubmit (no parentheses) – we pass the function, not its result
+    document.getElementById('transaction-form')
+        .addEventListener('submit', handleFormSubmit);   // Callback reference
 
-    // Keypress event with inline arrow function (anonymous)
-    // Demonstrates: closures (handleSetBudget in outer scope)
-    document.getElementById('budget-input').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            handleSetBudget();
-        }
-    });
+    document.getElementById('set-budget-btn')
+        .addEventListener('click', handleSetBudget);
 
-    // Change events for filters (trigger on dropdown change)
+    // Inline anonymous arrow function as callback (closure over handleSetBudget)
+    document.getElementById('budget-input')
+        .addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {   // e.key – String property of KeyboardEvent
+                handleSetBudget();
+            }
+        });
+
+    // Change events: fired when <select> value changes
     document.getElementById('filter-type').addEventListener('change', handleFilterChange);
     document.getElementById('filter-category').addEventListener('change', handleFilterChange);
     document.getElementById('sort-by').addEventListener('change', handleFilterChange);
     document.getElementById('clear-all-btn').addEventListener('click', handleClearAll);
 
-    updateAll();  // Initial render
+    updateAll();  // Initial render (function composition)
     console.log("✅ Ready!");
 }
 
-// DOMContentLoaded event: waits for HTML to load before executing init()
-// This is an event listener passed a function reference
+// DOMContentLoaded fires when HTML is parsed (before images/stylesheets load).
+// We pass init as a callback (function reference, not called immediately).
 document.addEventListener('DOMContentLoaded', init);
 
-// ==================== GLOBAL EXPORTS ====================
-// Expose functions to global window object for inline HTML event handlers
-// e.g., onclick="handleDelete(123)" requires window.handleDelete
-// Browser global scope: window object
-// This is necessary for onclick attributes in HTML to access these functions
+// ============================================================
+//  GLOBAL SCOPE EXPORTS  (window object)
+// ============================================================
+//
+//  Inline HTML handlers (onclick="handleDelete(123)") look up
+//  functions on the global `window` object.  Explicitly assigning
+//  functions to window properties makes them globally accessible
+//  regardless of module scope.
 
-window.addTransaction = addTransaction;
-window.deleteTransaction = deleteTransaction;
+window.addTransaction      = addTransaction;
+window.deleteTransaction   = deleteTransaction;
 window.clearAllTransactions = clearAllTransactions;
-window.setMonthlyBudget = setMonthlyBudget;
-window.addSampleData = addSampleData;
-window.handleDelete = handleDelete;
-window.transactions = transactions;  // Expose data array globally
+window.setMonthlyBudget    = setMonthlyBudget;
+window.addSampleData       = addSampleData;
+window.handleDelete        = handleDelete;
+window.transactions        = transactions;  // Expose data array for console inspection
 
-// ==================== SCROLL-BASED GRADIENT ====================
-/**
- * DYNAMIC SCROLL GRADIENT
- * Changes background gradient colors based on scroll position
- * Demonstrates: scroll events, requestAnimationFrame, CSS custom properties
- */
 (function initScrollGradient() {
-    // Check if body exists (for non-DOM environments)
-    if (typeof document === 'undefined') return;
+    if (typeof document === 'undefined') return;  // Guard for non-browser environments
 
     const colors = [
         'var(--gradient-color-1)',
@@ -770,52 +893,51 @@ window.transactions = transactions;  // Expose data array globally
         'var(--gradient-color-5)'
     ];
 
-    let ticking = false;
+    let ticking = false;  // Throttle flag
 
-    // Update gradient positions based on scroll
+    // Arrow function – no `this` needed; lexical scope is sufficient
     function updateGradient() {
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const scrollTop     = window.scrollY;
+        const docHeight     = document.documentElement.scrollHeight - window.innerHeight;
+        // Ternary guard: avoid division by zero if page has no scroll
         const scrollPercent = docHeight > 0 ? scrollTop / docHeight : 0;
 
-        // Cycle through gradient positions based on scroll
+        // Arithmetic with modulo (%) for cyclic position values 0–100
         const pos1 = (scrollPercent * 100 + 20) % 100;
         const pos2 = (scrollPercent * 100 + 40) % 100;
         const pos3 = (scrollPercent * 100 + 60) % 100;
         const pos4 = (scrollPercent * 100 + 80) % 100;
-        const pos5 = (scrollPercent * 100) % 100;
+        const pos5 = (scrollPercent * 100)       % 100;
 
-        // Apply CSS custom properties
+        // setProperty: update CSS custom variables on :root
         document.documentElement.style.setProperty('--gradient-pos-1', pos1 + '%');
         document.documentElement.style.setProperty('--gradient-pos-2', pos2 + '%');
         document.documentElement.style.setProperty('--gradient-pos-3', pos3 + '%');
         document.documentElement.style.setProperty('--gradient-pos-4', pos4 + '%');
         document.documentElement.style.setProperty('--gradient-pos-5', pos5 + '%');
 
-        // Cycle gradient colors based on scroll position (8 color stops)
+        // Rotate color array based on scroll position
         const colorIndex = Math.floor(scrollPercent * 8) % colors.length;
-        const nextColorIndex = (colorIndex + 1) % colors.length;
-        const blend = (scrollPercent * 8) % 1;
+        // slice() + spread to build rotated array (no mutation)
+        const newColors   = [...colors.slice(colorIndex), ...colors.slice(0, colorIndex)];
 
-        // Rotate colors for smooth transition
-        const newColors = [...colors.slice(colorIndex), ...colors.slice(0, colorIndex)];
         document.documentElement.style.setProperty('--gradient-color-1', newColors[0]);
         document.documentElement.style.setProperty('--gradient-color-2', newColors[1] || colors[0]);
         document.documentElement.style.setProperty('--gradient-color-3', newColors[2] || colors[0]);
         document.documentElement.style.setProperty('--gradient-color-4', newColors[3] || colors[0]);
         document.documentElement.style.setProperty('--gradient-color-5', newColors[4] || colors[0]);
 
-        ticking = false;
+        ticking = false;  // Reset throttle flag
     }
 
-    // Throttled scroll handler using requestAnimationFrame
+    // Throttled scroll handler: requestAnimationFrame batches updates
     window.addEventListener('scroll', function() {
         if (!ticking) {
+            // requestAnimationFrame: runs callback before next repaint (~60fps)
             window.requestAnimationFrame(updateGradient);
-            ticking = true;
+            ticking = true;  // Block further queueing until frame fires
         }
-    }, { passive: true });
+    }, { passive: true });  // passive: true → browser knows we won't call preventDefault
 
-    // Initial call
-    updateGradient();
-})();
+    updateGradient();  // Run once immediately on load
+})();  // IIFE: ( function )( ) – define and immediately invoke
